@@ -1,20 +1,25 @@
 # assemblyscript-wasm-4-envoy
 
-### normal wasm
+### common wasm
+#### init
 ```bash
 npm init -y 
 npm install --save-dev assemblyscript 
 npx asinit .
 ```
 
+#### build
 ```bash
 npm run asbuild
 ```
 
+#### run locally
 ```bash
 node index.js 
 3
 ```
 
-### for envoy
-<!-- https://www.npmjs.com/package/@solo-io/proxy-runtime -->
+### wasm for envoy 
+TODO
+
+> https://www.npmjs.com/package/@solo-io/proxy-runtime
