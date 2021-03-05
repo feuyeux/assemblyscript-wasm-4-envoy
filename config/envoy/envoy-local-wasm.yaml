@@ -1,0 +1,61 @@
+admin:
+  access_log_path: /tmp/admin_access.log
+  address:
+    socket_address: { address: 127.0.0.1, port_value: 9901 }
+
+static_resources:
+  listeners:
+    - name: listener_0
+      address:
+        socket_address: { address: 0.0.0.0, port_value: 80 }
+      filter_chains:
+        - filters:
+            - name: envoy.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
+                stat_prefix: ingress_http
+                use_remote_address: true
+                codec_type: AUTO
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - name: local_service
+                      domains: ["*"]
+                      routes:
+                        - match: { prefix: "/" }
+                          route: { cluster: some_service }
+                http_filters:
+                  - name: envoy.filters.http.wasm
+                    config:
+                      config:
+                        name: "header_filter"
+                        root_id: "header_filter"
+                        configuration:
+                          "@type": "type.googleapis.com/google.protobuf.StringValue"
+                          value: |
+                            {
+                              "head_tag_name": "custom-version",
+                              "head_tag_value": "hello1-v1"
+                            }
+                        vm_config:
+                          vm_id: "my_vm_id"
+                          runtime: "envoy.wasm.runtime.v8"
+                          code:
+                            local:
+                              filename: /etc/propaganda_filter.wasm
+                          allow_precompiled: false
+                  - name: envoy.router
+  clusters:
+    - name: some_service
+      connect_timeout: 0.25s
+      type: STATIC
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: some_service
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 127.0.0.1
+                      port_value: 9901

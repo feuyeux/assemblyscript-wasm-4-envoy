@@ -1,34 +1,45 @@
+// this exports the required functions for the proxy to interact with us.
+// @ts-ignore
 export * from "@solo-io/proxy-runtime/proxy";
-import { RootContext, Context, RootContextHelper, ContextHelper, registerRootContext, FilterHeadersStatusValues, stream_context } from "@solo-io/proxy-runtime";
+import {
+    RootContext,
+    Context,
+    registerRootContext,
+    FilterHeadersStatusValues,
+    stream_context
+} from "@solo-io/proxy-runtime";
+import {JSON} from "assemblyscript-json";
+import "wasi"
+import {Console} from "as-wasi"
 
 class AddHeaderRoot extends RootContext {
-  configuration : string;
-
-  onConfigure(): bool {
-    let conf_buffer = super.getConfiguration();
-    let result = String.UTF8.decode(conf_buffer);
-    this.configuration = result;
-    return true;
-  }
-
-  createContext(): Context {
-    return ContextHelper.wrap(new AddHeader(this));
-  }
+    createContext(context_id: u32): Context {
+        return new AddHeader(context_id, this);
+    }
 }
 
 class AddHeader extends Context {
-  root_context : AddHeaderRoot;
-  constructor(root_context:AddHeaderRoot){
-    super();
-    this.root_context = root_context;
-  }
-  onResponseHeaders(a: u32): FilterHeadersStatusValues {
-    const root_context = this.root_context;
-    if (root_context.configuration == "") {
-      stream_context.headers.response.add("hello", "world!");
-    } else {
-      stream_context.headers.response.add("hello", root_context.configuration);
+    constructor(context_id: u32, root_context: AddHeaderRoot) {
+        super(context_id, root_context);
     }
-    return FilterHeadersStatusValues.Continue;
-  }
+
+    onResponseHeaders(a: u32, end_of_stream: bool): FilterHeadersStatusValues {
+        const root_context = this.root_context;
+        let configuration = root_context.getConfiguration();
+        Console.log("configuration=" + configuration)
+        if (configuration == "") {
+            Console.log("configuration is empty");
+            stream_context.headers.response.add("hello", "world!");
+        } else {
+            Console.log("parse configuration");
+            // let headTag: JSON.Value = JSON.parse(configuration);
+            // Console.log("parse=" + headTag.toString());
+            stream_context.headers.response.add("hello", configuration);
+        }
+        return FilterHeadersStatusValues.Continue;
+    }
 }
+
+registerRootContext((context_id: u32) => {
+    return new AddHeaderRoot(context_id);
+}, "header_filter");
