@@ -7,16 +7,17 @@
     "test": "node tests",
     "asbuild:untouched": "asc assembly/index.ts --target debug",
     "asbuild:optimized": "asc assembly/index.ts --target release",
-    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
+    "asbuild:filter": "asc assembly/filter.ts -b build/optimized.wasm --use abort=abort_proc_exit -t build/optimized.wat --sourceMap --optimize --target release"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "assemblyscript": "^0.18.12",
-    "@solo-io/proxy-runtime": "^0.1.1"
-  },
   "dependencies": {
-    "@assemblyscript/loader": "^0.18.12"
+    "@assemblyscript/loader": "^0.18.12",
+    "@solo-io/proxy-runtime": "file:/Users/erichan/cooding/github/proxy-runtime"
+  },
+  "devDependencies": {
+    "assemblyscript": "^0.18.12"
   }
 }

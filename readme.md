@@ -10,6 +10,7 @@ npx asinit .
 
 #### build
 ```bash
+#npm install --save-dev assemblyscript
 npm run asbuild
 ```
 
