@@ -4,7 +4,7 @@
 #### init
 ```bash
 npm init -y 
-npm install --save-dev assemblyscript 
+npm install --save-dev assemblyscript
 npx asinit .
 ```
 
@@ -16,11 +16,18 @@ npm run asbuild
 
 #### run locally
 ```bash
-node index.js 
+node index.js
 3
 ```
 
 ### wasm for envoy 
-TODO
+```bash
+npm install --save assemblyscript-json
+npm run asbuild:filter
+```
 
-> https://www.npmjs.com/package/@solo-io/proxy-runtime
+### reference
+- https://www.npmjs.com/package/@solo-io/proxy-runtime
+- https://github.com/solo-io/proxy-runtime/issues/36
+- https://www.npmjs.com/package/assemblyscript-json
+- https://www.assemblyscript.org/introduction.html
