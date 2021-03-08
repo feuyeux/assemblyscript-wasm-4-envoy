@@ -5,5 +5,6 @@ SCRIPT_PATH="$(
 )/"
 cd "$SCRIPT_PATH" || exit
 cd ..
+set -e
 npm run asbuild:filter
 docker-compose up --build
