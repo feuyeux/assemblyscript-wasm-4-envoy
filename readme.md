@@ -1,5 +1,9 @@
 # assemblyscript-wasm-4-envoy
 
+> assemblyscript 尚未成熟 此时进场 为时太早；很多基础都不具备
+> 且社区释放的sample功能非常有限 无法实现稍微有点逻辑功能的wasm
+> 2021.3.8
+
 ### common wasm
 #### init
 ```bash

@@ -10,14 +10,13 @@
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
     "asbuild:filter": "asc assembly/filter.ts -b build/filter.wasm --use abort=abort_proc_exit -t build/filter.wat --sourceMap --optimize --target release"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@assemblyscript/loader": "^0.14.9",
-    "@solo-io/proxy-runtime": "^0.1.8"
+    "@solo-io/proxy-runtime": "^0.1.8",
+    "assemblyscript-json": "1.0.0"
   },
   "devDependencies": {
+    "@assemblyscript/node": "github:AssemblyScript/node",
     "assemblyscript": "^0.14.9"
   }
 }
